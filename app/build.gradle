@@ -1,0 +1,46 @@
+apply plugin: 'com.android.application'
+
+android {
+    compileSdkVersion 25
+    buildToolsVersion '25.0.0'
+
+    defaultConfig {
+        applicationId "co.rishe.paranoidandroid"
+        minSdkVersion 17
+        targetSdkVersion 25
+        versionCode 1
+        versionName "1.0"
+    }
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+    dataBinding {
+        enabled = true
+    }
+}
+
+ext {
+    supportLibraryVersion="25.0.1"
+    retrofitVersion = '2.0.0'
+}
+dependencies {
+    compile fileTree(include: ['*.jar'], dir: 'libs')
+    testCompile 'junit:junit:4.12'
+    compile "com.android.support:appcompat-v7:$supportLibraryVersion"
+    compile "com.android.support:cardview-v7:$supportLibraryVersion"
+    compile "com.android.support:recyclerview-v7:$supportLibraryVersion"
+    compile "com.squareup.retrofit2:retrofit:$retrofitVersion"
+    compile "com.squareup.retrofit2:converter-gson:$retrofitVersion"
+    compile "com.squareup.retrofit2:adapter-rxjava:$retrofitVersion"
+    compile 'com.squareup.picasso:picasso:2.5.2'
+    compile 'io.reactivex:rxandroid:1.1.0'
+    compile 'de.hdodenhof:circleimageview:1.3.0'
+    compile 'junit:junit:4.12'
+    compile 'org.mockito:mockito-core:1.10.19'
+    compile 'org.robolectric:robolectric:3.0'
+    compile project(path: ':graphql-client')
+    compile project(path: ':paranoidandroid')
+}
