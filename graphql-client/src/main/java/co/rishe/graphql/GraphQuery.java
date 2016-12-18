@@ -29,9 +29,12 @@ public class GraphQuery {
                     s += " " + field.getName() + ", ";
                 }
             } else if (isListType(field.getType())) {
-                ParameterizedType stringListType = (ParameterizedType) field.getGenericType();
-                Class<?> listClass = (Class<?>) stringListType.getActualTypeArguments()[0];
-                s += " " + field.getName() + formatFilters(getFilters(listClass)) + " { " + generateQueryOf(listClass) + " } ";
+                ParameterizedType listType = (ParameterizedType) field.getGenericType();
+                Class<?> listClass = (Class<?>) listType.getActualTypeArguments()[0];
+                if(isPermittedType(listClass))
+                    s += " " + field.getName() + formatFilters(getFilters(listClass));
+                else
+                    s += " " + field.getName() + formatFilters(getFilters(listClass)) + " { " + generateQueryOf(listClass) + " } ";
             } else {
                 s += " " + field.getName() + formatFilters(getFilters(field.getType())) + " { " + generateQueryOf(field.getType()) + " } ";
             }
