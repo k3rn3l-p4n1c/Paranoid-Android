@@ -13,7 +13,7 @@ import java.util.Map;
  * Created by Bardia on 12/11/16.
  */
 public class GraphQuery {
-     public String getQueryString(){
+    public String getQueryString() {
         return generateQueryOf(this.getClass());
     }
 
@@ -22,7 +22,7 @@ public class GraphQuery {
 
         for (Field field :
                 cl.getFields()) {
-            if(isInValidType(field))
+            if (isInValidType(field))
                 continue;
             if (isPermittedType(field.getType())) {
                 if (!isFilter(field)) {
@@ -53,14 +53,14 @@ public class GraphQuery {
         return cl.isArray() || cl.equals(List.class);
     }
 
-    private HashMap<String, String> getFilters(Class cl) {
-        HashMap<String, String> filters = new HashMap<String, String>();
+    private HashMap<String, Object> getFilters(Class cl) {
+        HashMap<String, Object> filters = new HashMap<String, Object>();
         for (Field field :
                 cl.getFields()) {
             if (isPermittedType(field.getType()) && isFilter(field)) {
                 try {
                     field.setAccessible(true);
-                    filters.put(getFilterName(field), String.valueOf(field.getInt(this)));
+                    filters.put(getFilterName(field), field.get(this));
                 } catch (IllegalAccessException e) {
                     e.printStackTrace();
                 }
@@ -86,13 +86,21 @@ public class GraphQuery {
         return str.substring(2, len - 2);
     }
 
-    private String formatFilters(HashMap<String, String> filters) {
+    private String formatFilters(HashMap<String, Object> filters) {
         if (filters.size() == 0)
             return "";
         else {
             String str = "( ";
-            for (Map.Entry<String, String> filter : filters.entrySet()) {
-                str += filter.getKey() + ": " + filter.getValue() + ", ";
+            for (Map.Entry<String, Object> filter : filters.entrySet()) {
+                Object value = filter.getValue();
+                String valueStr;
+                if (value instanceof Integer || value instanceof Double)
+                    valueStr = String.valueOf(value);
+                else if (value instanceof String)
+                    valueStr = "\\\"" + value.toString() + "\\\"";
+                else
+                    throw new IllegalAccessError("Type "+ value.getClass() + " is illegal.");
+                str += filter.getKey() + ": " + valueStr +", ";
             }
             return str + ")";
         }

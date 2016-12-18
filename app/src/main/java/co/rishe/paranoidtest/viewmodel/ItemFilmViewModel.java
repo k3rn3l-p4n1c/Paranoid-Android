@@ -1,14 +1,17 @@
 package co.rishe.paranoidtest.viewmodel;
 
 import android.content.Context;
+import android.content.Intent;
 import android.databinding.BaseObservable;
 import android.view.View;
 
 import co.rishe.graphql.GraphQuery;
 import co.rishe.paranoidandroid.ResourceActivity;
 import co.rishe.paranoidandroid.ViewModel;
+import co.rishe.paranoidtest.resource.FilmQuery;
 import co.rishe.paranoidtest.resource.Films;
 import co.rishe.paranoidtest.resource.Films.AllFilms.Film;
+import co.rishe.paranoidtest.view.FilmActivity;
 
 
 /**
@@ -39,7 +42,9 @@ public class ItemFilmViewModel extends ViewModel {
     }
 
     public void onItemClick(View view) {
-        //context.startActivity(RepositoryActivity.newIntent(context, film));
+        FilmQuery.Film.__id__ = film.id;
+
+        context.startActivity(new Intent(context, FilmActivity.class));
     }
 
     // Allows recycling ItemRepoViewModels within the recyclerview adapter

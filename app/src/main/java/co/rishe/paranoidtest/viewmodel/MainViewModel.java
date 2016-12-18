@@ -5,8 +5,6 @@ import android.databinding.ObservableInt;
 import android.util.Log;
 import android.view.View;
 
-import java.util.List;
-
 import co.rishe.paranoidandroid.ResourceActivity;
 import co.rishe.paranoidandroid.ViewModel;
 import co.rishe.paranoidtest.R;
@@ -44,10 +42,5 @@ public class MainViewModel extends ViewModel {
         else {
             return new Films();
         }
-    }
-
-
-    public interface DataListener {
-        void onFilmsChanged(List<Films.AllFilms.Film> films);
     }
 }
