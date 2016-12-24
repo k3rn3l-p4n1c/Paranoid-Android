@@ -1,5 +1,6 @@
 package co.rishe.paranoidandroid;
 
+import android.databinding.ObservableField;
 import android.util.Log;
 
 import co.rishe.graphql.GraphClient;
@@ -40,7 +41,7 @@ public abstract class ViewModel<Model extends GraphQuery> {
                     @Override
                     public void onCompleted() {
                         Log.e("On comp", data.toString());
-                        activity.onCompleted();
+                        ViewModel.this.onCompleted();
                     }
 
                     @Override
@@ -60,4 +61,7 @@ public abstract class ViewModel<Model extends GraphQuery> {
         subscription = null;
         activity = null;
     }
+
+    public abstract void onCompleted();
+
 }

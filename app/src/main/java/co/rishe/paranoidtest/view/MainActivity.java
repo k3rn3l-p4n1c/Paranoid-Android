@@ -5,21 +5,18 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 
-import java.util.List;
-
 import co.rishe.paranoidandroid.ResourceActivity;
 import co.rishe.paranoidandroid.ResourceObserver;
 import co.rishe.paranoidtest.FilmAdapter;
 import co.rishe.paranoidtest.R;
 import co.rishe.paranoidtest.databinding.MainActivityBinding;
-import co.rishe.paranoidtest.resource.Films;
 import co.rishe.paranoidtest.viewmodel.MainViewModel;
 
 @ResourceObserver(
         data_binding = MainActivityBinding.class,
         view_model = MainViewModel.class,
         layout = R.layout.main_activity)
-public class MainActivity extends ResourceActivity<MainViewModel, MainActivityBinding> implements MainViewModel.DataListener {
+public class MainActivity extends ResourceActivity<MainViewModel, MainActivityBinding>  {
 
 
     @Override
@@ -45,7 +42,4 @@ public class MainActivity extends ResourceActivity<MainViewModel, MainActivityBi
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
     }
 
-    @Override
-    public void onFilmsChanged(final List<Films.AllFilms.Film> films) {
-    }
 }

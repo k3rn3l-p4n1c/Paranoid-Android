@@ -1,11 +1,9 @@
 package co.rishe.paranoidtest.viewmodel;
 
 import android.databinding.ObservableField;
-import android.databinding.ObservableInt;
 
 import java.util.List;
 
-import co.rishe.graphql.GraphQuery;
 import co.rishe.paranoidandroid.ResourceActivity;
 import co.rishe.paranoidandroid.ViewModel;
 import co.rishe.paranoidtest.resource.FilmQuery;
@@ -13,21 +11,35 @@ import co.rishe.paranoidtest.resource.FilmQuery;
 /**
  * Created by Bardia on 12/18/16.
  */
-public class FilmViewModel extends ViewModel {
+public class FilmViewModel extends ViewModel<FilmQuery> {
     public ObservableField<String> title;
     public ObservableField<String> openingCrawl;
     public ObservableField<String> director;
-    public ObservableField<String> producers;
+    public ObservableField<List<String>> producers;
     public ObservableField<String> created;
 
-    private FilmQuery.Film film;
     public FilmViewModel(ResourceActivity activity) {
         super(activity);
+        title = new ObservableField<>("title");
+        openingCrawl = new ObservableField<>();
+        director = new ObservableField<>();
+        producers = new ObservableField<>();
+        created = new ObservableField<>();
     }
 
 
     @Override
-    public GraphQuery getData() {
+    public FilmQuery getData() {
         return new FilmQuery();
+    }
+
+    @Override
+    public void onCompleted() {
+        FilmQuery.Film film = data.film;
+        title.set(film.title);
+        openingCrawl.set(film.openingCrawl);
+        director.set(film.director);
+        producers.set(film.producers);
+        created.set(film.created);
     }
 }

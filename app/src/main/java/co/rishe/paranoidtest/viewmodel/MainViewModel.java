@@ -43,4 +43,9 @@ public class MainViewModel extends ViewModel {
             return new Films();
         }
     }
+
+    @Override
+    public void onCompleted() {
+        activity.onCompleted();
+    }
 }
