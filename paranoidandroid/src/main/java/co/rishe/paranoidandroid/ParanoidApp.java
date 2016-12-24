@@ -4,16 +4,23 @@ package co.rishe.paranoidandroid;
 import android.app.Application;
 import android.content.Context;
 
+import java.util.LinkedHashMap;
+import java.util.Map;
+
 import co.rishe.graphql.GraphClient;
+import co.rishe.graphql.GraphQuery;
 import rx.Scheduler;
 import rx.schedulers.Schedulers;
+
 /**
- * Created by Bardia on 12/17/16.
+ * Paranoid android app
  */
 public class ParanoidApp extends Application {
 
     private Scheduler defaultSubscribeScheduler;
     private GraphClient graphClient;
+    private Map<Long, Linkage> linkageMap;
+
 
     public static ParanoidApp get(Context context) {
         return (ParanoidApp) context.getApplicationContext();
@@ -33,8 +40,19 @@ public class ParanoidApp extends Application {
         return defaultSubscribeScheduler;
     }
 
-    //User to change scheduler from tests
     public void setDefaultSubscribeScheduler(Scheduler scheduler) {
         this.defaultSubscribeScheduler = scheduler;
+    }
+
+    public void link(Long id, GraphQuery query, LinkagePolicy policy) {
+        if (linkageMap == null) {
+            linkageMap = new LinkedHashMap<>();
+        }
+
+        linkageMap.put(id, new Linkage<>(query, policy, this));
+    }
+
+    public Linkage getLinkage(Long id){
+        return linkageMap.get(id);
     }
 }

@@ -5,11 +5,14 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 
+import co.rishe.paranoidandroid.ParanoidApp;
+import co.rishe.paranoidandroid.PeriodicLinkage;
 import co.rishe.paranoidandroid.ResourceActivity;
 import co.rishe.paranoidandroid.ResourceObserver;
 import co.rishe.paranoidtest.FilmAdapter;
 import co.rishe.paranoidtest.R;
 import co.rishe.paranoidtest.databinding.MainActivityBinding;
+import co.rishe.paranoidtest.resource.Films;
 import co.rishe.paranoidtest.viewmodel.MainViewModel;
 
 @ResourceObserver(
@@ -23,6 +26,8 @@ public class MainActivity extends ResourceActivity<MainViewModel, MainActivityBi
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setupRecyclerView(dataBinding.filmsRecyclerView);
+        ParanoidApp app = (ParanoidApp) getApplication();
+        app.link(1L, new Films(), new PeriodicLinkage());
     }
 
     @Override

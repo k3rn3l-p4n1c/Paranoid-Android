@@ -2,6 +2,9 @@ package co.rishe.paranoidtest.view;
 
 import android.os.Bundle;
 
+import java.io.InvalidObjectException;
+
+import co.rishe.paranoidandroid.ParanoidApp;
 import co.rishe.paranoidandroid.ResourceActivity;
 import co.rishe.paranoidandroid.ResourceObserver;
 import co.rishe.paranoidtest.R;
@@ -17,6 +20,12 @@ public class FilmActivity extends ResourceActivity<FilmViewModel, FilmActivityBi
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        ParanoidApp app = (ParanoidApp) getApplication();
+        try {
+            System.out.println(app.getLinkage(1L).get());
+        } catch (InvalidObjectException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override

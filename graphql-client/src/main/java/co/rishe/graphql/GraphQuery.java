@@ -44,7 +44,7 @@ public class GraphQuery {
     }
 
     private boolean isInValidType(Field field) {
-        System.out.println(field.getName());
+//        System.out.println(field.getName());
         return field.getName().contains("$");
     }
 

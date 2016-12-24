@@ -1,6 +1,5 @@
 package co.rishe.paranoidandroid;
 
-import android.databinding.ObservableField;
 import android.util.Log;
 
 import co.rishe.graphql.GraphClient;
@@ -31,8 +30,9 @@ public abstract class ViewModel<Model extends GraphQuery> {
         ParanoidApp application = ParanoidApp.get(activity);
         GraphClient graphClient = application.getGraphClient();
         Model films = getData();
-        GraphClient.GraphRequest<Model> request = graphClient.getRequest(films);
-        Log.e("Query:", request.getQuery().getQueryString());
+        GraphClient.GraphRequest<Model> request;
+        request = graphClient.getRequest(films);
+        Log.w("Query:", request.getQuery().getQueryString());
 
         subscription = request.promise()
                 .observeOn(AndroidSchedulers.mainThread())
