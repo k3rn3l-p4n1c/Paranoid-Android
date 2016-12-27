@@ -31,27 +31,27 @@ public class GraphClient {
         this.baseUrl = baseUrl;
     }
 
-    public <T extends GraphQuery> GraphRequest createRequest(final T query) {
+    public <T> GraphRequest createRequest(Class<T> query) {
         return new GraphRequest<T>(query);
     }
 
 
-    public class GraphRequest<T extends GraphQuery> {
+    public class GraphRequest<T> {
         private final Class<T> tClass;
-        private final T query;
+        private final GraphQuery query;
 
-        GraphRequest(final T query) {
-            this.tClass = (Class<T>) query.getClass();
-            this.query = query;
+        GraphRequest(Class<T> qClass) {
+            this.tClass = qClass;
+            this.query = new GraphQuery(qClass);
+
         }
 
-        public T getQuery() {
+        public GraphQuery getQuery() {
             return query;
         }
 
         public Call getRequest() {
             final MediaType mediaType = MediaType.parse("application/json");
-
             String bodyString = "{\n\t\"query\":\n\t\t \"{ " + query.getQueryString() + " }\"\n}";
 
             final RequestBody body = RequestBody.create(mediaType, bodyString);

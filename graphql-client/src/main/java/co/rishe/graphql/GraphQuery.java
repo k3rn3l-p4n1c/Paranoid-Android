@@ -13,37 +13,50 @@ import java.util.Map;
  * Created by Bardia on 12/11/16.
  */
 public class GraphQuery {
-    public String getQueryString() {
-        return generateQueryOf(this.getClass());
+    private Class queryClass;
+    private String queryString;
+
+    public GraphQuery(Class queryClass) {
+        this.queryClass = queryClass;
     }
 
-    private String generateQueryOf(Class cl) {
-        String s = "";
+    public String getQueryString() {
+        if (queryString == null)
+            generateQueryString();
+        return queryString;
+    }
+
+    private void generateQueryString() {
+        queryString = "";
 
         for (Field field :
-                cl.getFields()) {
+                queryClass.getFields()) {
+            GraphQuery child = new GraphQuery(field.getType());
+
             if (isFieldInvalid(field))
                 continue;
-            if (isPermittedType(field.getType())) {
+            if (child.isPermittedType()) {
                 if (!isFilter(field)) {
-                    s += " " + field.getName() + ", ";
+                    queryString += " " + field.getName() + ", ";
                 }
-            } else if (isListType(field.getType())) {
+            } else if (child.isListType()) {
                 ParameterizedType listType = (ParameterizedType) field.getGenericType();
                 Class<?> listClass = (Class<?>) listType.getActualTypeArguments()[0];
-                if(isPermittedType(listClass))
-                    s += " " + field.getName() + generateFilterQuery(getFilters(listClass));
-                else
-                    s += " " + field.getName() + generateFilterQuery(getFilters(listClass)) + " { " + generateQueryOf(listClass) + " } ";
+                GraphQuery childL = new GraphQuery(listClass);
+
+                if (childL.isPermittedType()) {
+                    queryString += " " + field.getName() + childL.generateFilterQuery();
+                } else {
+                    queryString += " " + field.getName() + childL.generateFilterQuery() + " { " + childL.getQueryString() + " } ";
+                }
             } else {
-                s += " " + field.getName() + generateFilterQuery(getFilters(field.getType())) + " { " + generateQueryOf(field.getType()) + " } ";
+                queryString += " " + field.getName() + child.generateFilterQuery() + " { " + child.getQueryString() + " } ";
             }
         }
-
-        return s;
     }
 
-    private String generateFilterQuery(HashMap<String, Object> filters) {
+    private String generateFilterQuery() {
+        HashMap<String, Object> filters = getFilters();
         if (filters.size() == 0)
             return "";
         else {
@@ -56,12 +69,41 @@ public class GraphQuery {
                 else if (value instanceof String)
                     valueStr = "\\\"" + value.toString() + "\\\"";
                 else
-                    throw new IllegalAccessError("Type "+ value.getClass() + " is illegal.");
-                str += filter.getKey() + ": " + valueStr +", ";
+                    throw new IllegalAccessError("Type " + value.getClass() + " is illegal.");
+                str += filter.getKey() + ": " + valueStr + ", ";
             }
             return str + ")";
         }
     }
+
+    private boolean isPermittedType() {
+        return queryClass.isPrimitive()
+                || ClassUtils.wrapperToPrimitive(queryClass) != null
+                || queryClass.equals(String.class);
+    }
+
+    private boolean isListType() {
+        return queryClass.isArray() || queryClass.equals(List.class);
+    }
+
+    private HashMap<String, Object> getFilters() {
+        HashMap<String, Object> filters = new HashMap<String, Object>();
+        for (Field field :
+                queryClass.getFields()) {
+            GraphQuery child = new GraphQuery(field.getType());
+
+            if (child.isPermittedType() && isFilter(field)) {
+                try {
+                    field.setAccessible(true);
+                    filters.put(getFilterName(field), field.get(this));
+                } catch (IllegalAccessException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+        return filters;
+    }
+
 
     private boolean isFieldInvalid(Field field) {
         return field.getName().contains("$");
@@ -82,29 +124,5 @@ public class GraphQuery {
         String str = field.getName();
         int len = str.length();
         return str.substring(2, len - 2);
-    }
-
-    static private boolean isPermittedType(Class cl) {
-        return cl.isPrimitive() || ClassUtils.wrapperToPrimitive(cl) != null || cl.equals(String.class);
-    }
-
-    static private boolean isListType(Class cl) {
-        return cl.isArray() || cl.equals(List.class);
-    }
-
-    private HashMap<String, Object> getFilters(Class cl) {
-        HashMap<String, Object> filters = new HashMap<String, Object>();
-        for (Field field :
-                cl.getFields()) {
-            if (isPermittedType(field.getType()) && isFilter(field)) {
-                try {
-                    field.setAccessible(true);
-                    filters.put(getFilterName(field), field.get(this));
-                } catch (IllegalAccessException e) {
-                    e.printStackTrace();
-                }
-            }
-        }
-        return filters;
     }
 }
