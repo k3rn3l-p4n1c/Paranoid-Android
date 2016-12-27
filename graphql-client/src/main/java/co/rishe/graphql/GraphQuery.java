@@ -22,7 +22,7 @@ public class GraphQuery {
 
         for (Field field :
                 cl.getFields()) {
-            if (isInValidType(field))
+            if (isFieldInvalid(field))
                 continue;
             if (isPermittedType(field.getType())) {
                 if (!isFilter(field)) {
@@ -32,20 +32,56 @@ public class GraphQuery {
                 ParameterizedType listType = (ParameterizedType) field.getGenericType();
                 Class<?> listClass = (Class<?>) listType.getActualTypeArguments()[0];
                 if(isPermittedType(listClass))
-                    s += " " + field.getName() + formatFilters(getFilters(listClass));
+                    s += " " + field.getName() + generateFilterQuery(getFilters(listClass));
                 else
-                    s += " " + field.getName() + formatFilters(getFilters(listClass)) + " { " + generateQueryOf(listClass) + " } ";
+                    s += " " + field.getName() + generateFilterQuery(getFilters(listClass)) + " { " + generateQueryOf(listClass) + " } ";
             } else {
-                s += " " + field.getName() + formatFilters(getFilters(field.getType())) + " { " + generateQueryOf(field.getType()) + " } ";
+                s += " " + field.getName() + generateFilterQuery(getFilters(field.getType())) + " { " + generateQueryOf(field.getType()) + " } ";
             }
         }
 
         return s;
     }
 
-    private boolean isInValidType(Field field) {
-//        System.out.println(field.getName());
+    private String generateFilterQuery(HashMap<String, Object> filters) {
+        if (filters.size() == 0)
+            return "";
+        else {
+            String str = "( ";
+            for (Map.Entry<String, Object> filter : filters.entrySet()) {
+                Object value = filter.getValue();
+                String valueStr;
+                if (value instanceof Integer || value instanceof Double)
+                    valueStr = String.valueOf(value);
+                else if (value instanceof String)
+                    valueStr = "\\\"" + value.toString() + "\\\"";
+                else
+                    throw new IllegalAccessError("Type "+ value.getClass() + " is illegal.");
+                str += filter.getKey() + ": " + valueStr +", ";
+            }
+            return str + ")";
+        }
+    }
+
+    private boolean isFieldInvalid(Field field) {
         return field.getName().contains("$");
+    }
+
+    static private boolean isFilter(Field field) {
+        String str = field.getName();
+        int len = str.length();
+
+        return len > 4
+                && str.charAt(0) == '_'
+                && str.charAt(1) == '_'
+                && str.charAt(len - 2) == '_'
+                && str.charAt(len - 1) == '_';
+    }
+
+    static private String getFilterName(Field field) {
+        String str = field.getName();
+        int len = str.length();
+        return str.substring(2, len - 2);
     }
 
     static private boolean isPermittedType(Class cl) {
@@ -70,42 +106,5 @@ public class GraphQuery {
             }
         }
         return filters;
-    }
-
-    static private boolean isFilter(Field field) {
-        String str = field.getName();
-        int len = str.length();
-
-        return len > 4
-                && str.charAt(0) == '_'
-                && str.charAt(1) == '_'
-                && str.charAt(len - 2) == '_'
-                && str.charAt(len - 1) == '_';
-    }
-
-    static private String getFilterName(Field field) {
-        String str = field.getName();
-        int len = str.length();
-        return str.substring(2, len - 2);
-    }
-
-    private String formatFilters(HashMap<String, Object> filters) {
-        if (filters.size() == 0)
-            return "";
-        else {
-            String str = "( ";
-            for (Map.Entry<String, Object> filter : filters.entrySet()) {
-                Object value = filter.getValue();
-                String valueStr;
-                if (value instanceof Integer || value instanceof Double)
-                    valueStr = String.valueOf(value);
-                else if (value instanceof String)
-                    valueStr = "\\\"" + value.toString() + "\\\"";
-                else
-                    throw new IllegalAccessError("Type "+ value.getClass() + " is illegal.");
-                str += filter.getKey() + ": " + valueStr +", ";
-            }
-            return str + ")";
-        }
     }
 }

@@ -31,7 +31,7 @@ public abstract class ViewModel<Model extends GraphQuery> {
         GraphClient graphClient = application.getGraphClient();
         Model films = getData();
         GraphClient.GraphRequest<Model> request;
-        request = graphClient.getRequest(films);
+        request = graphClient.createRequest(films);
         Log.w("Query:", request.getQuery().getQueryString());
 
         subscription = request.promise()

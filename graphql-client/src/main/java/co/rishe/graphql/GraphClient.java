@@ -7,8 +7,6 @@ import com.google.gson.Gson;
 import okhttp3.*;
 import rx.Observable;
 import rx.Subscriber;
-import rx.Subscription;
-import rx.schedulers.Schedulers;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -23,19 +21,17 @@ import java.io.IOException;
 public class GraphClient {
 
     private final OkHttpClient httpClient;
-    private final MediaType mediaType;
     private final Gson gson;
-    private final String url;
+    private final String baseUrl;
 
 
-    public GraphClient(String url) {
+    public GraphClient(String baseUrl) {
         this.gson = new Gson();
         this.httpClient = new OkHttpClient();
-        this.mediaType = MediaType.parse("application/json");
-        this.url = url;
+        this.baseUrl = baseUrl;
     }
 
-    public <T extends GraphQuery> GraphRequest getRequest(final T query) {
+    public <T extends GraphQuery> GraphRequest createRequest(final T query) {
         return new GraphRequest<T>(query);
     }
 
@@ -54,12 +50,14 @@ public class GraphClient {
         }
 
         public Call getRequest() {
+            final MediaType mediaType = MediaType.parse("application/json");
+
             String bodyString = "{\n\t\"query\":\n\t\t \"{ " + query.getQueryString() + " }\"\n}";
 
             final RequestBody body = RequestBody.create(mediaType, bodyString);
 
             final Request request = new Request.Builder()
-                    .url(url)
+                    .url(baseUrl)
                     .post(body)
                     .addHeader("content-type", "application/json")
                     .build();

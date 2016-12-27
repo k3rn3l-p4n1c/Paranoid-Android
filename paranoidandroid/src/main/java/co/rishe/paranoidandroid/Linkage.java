@@ -43,7 +43,7 @@ public class Linkage<Model extends GraphQuery> extends Observable {
     void fetch() {
         ParanoidApp application = ParanoidApp.get(context);
         GraphClient graphClient = application.getGraphClient();
-        GraphClient.GraphRequest<Model> request = graphClient.getRequest(data);
+        GraphClient.GraphRequest<Model> request = graphClient.createRequest(data);
         Log.w("Query:", request.getQuery().getQueryString());
 
         subscription = request.promise()
