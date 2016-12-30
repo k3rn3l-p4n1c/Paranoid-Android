@@ -4,8 +4,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.view.View;
 
-import co.rishe.paranoidandroid.ResourceActivity;
-import co.rishe.paranoidandroid.ViewModel;
+import co.rishe.paranoidandroid.mvvm.ResourceActivity;
+import co.rishe.paranoidandroid.mvvm.ViewModel;
 import co.rishe.paranoidtest.resource.FilmQuery;
 import co.rishe.paranoidtest.resource.Films;
 import co.rishe.paranoidtest.resource.Films.AllFilms.Film;
@@ -21,7 +21,7 @@ public class ItemFilmViewModel extends ViewModel<Films> {
     private Context context;
 
     public ItemFilmViewModel(ResourceActivity activity, Film film) {
-        super(activity);
+        super(activity, Films.class);
         this.film = film;
         this.context = activity;
         //loadData();
@@ -49,11 +49,6 @@ public class ItemFilmViewModel extends ViewModel<Films> {
     public void setFilm(Film film) {
         this.film = film;
         //notifyChange();
-    }
-
-    @Override
-    public Films getData() {
-        return new Films();
     }
 
     @Override

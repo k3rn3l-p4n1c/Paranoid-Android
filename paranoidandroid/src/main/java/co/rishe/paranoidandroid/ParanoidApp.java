@@ -8,7 +8,9 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 import co.rishe.graphql.GraphClient;
-import co.rishe.graphql.GraphQuery;
+import co.rishe.graphql.GraphModel;
+import co.rishe.paranoidandroid.linkage.Linkage;
+import co.rishe.paranoidandroid.linkage.LinkagePolicy;
 import rx.Scheduler;
 import rx.schedulers.Schedulers;
 
@@ -44,12 +46,12 @@ public class ParanoidApp extends Application {
         this.defaultSubscribeScheduler = scheduler;
     }
 
-    public void link(Long id, GraphQuery query, LinkagePolicy policy) {
+    public void link(Long id, GraphModel query, LinkagePolicy policy) {
         if (linkageMap == null) {
             linkageMap = new LinkedHashMap<>();
         }
 
-        linkageMap.put(id, new Linkage<>(query, policy, this));
+        linkageMap.put(id, new Linkage<>(query.getClass(), policy, this));
     }
 
     public Linkage getLinkage(Long id){

@@ -31,12 +31,12 @@ public class GraphClient {
         this.baseUrl = baseUrl;
     }
 
-    public <T> GraphRequest createRequest(Class<T> query) {
+    public <T extends GraphModel> GraphRequest createRequest(Class<T> query) {
         return new GraphRequest<T>(query);
     }
 
 
-    public class GraphRequest<T> {
+    public class GraphRequest<T extends GraphModel> {
         private final Class<T> tClass;
         private final GraphQuery query;
 

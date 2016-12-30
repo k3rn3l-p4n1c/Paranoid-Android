@@ -5,8 +5,8 @@ import android.os.Bundle;
 import java.io.InvalidObjectException;
 
 import co.rishe.paranoidandroid.ParanoidApp;
-import co.rishe.paranoidandroid.ResourceActivity;
-import co.rishe.paranoidandroid.ResourceObserver;
+import co.rishe.paranoidandroid.mvvm.ResourceActivity;
+import co.rishe.paranoidandroid.mvvm.ResourceObserver;
 import co.rishe.paranoidtest.R;
 import co.rishe.paranoidtest.databinding.FilmActivityBinding;
 import co.rishe.paranoidtest.viewmodel.FilmViewModel;

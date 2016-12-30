@@ -1,4 +1,4 @@
-package co.rishe.paranoidandroid;
+package co.rishe.paranoidandroid.mvvm;
 
 import android.databinding.ViewDataBinding;
 

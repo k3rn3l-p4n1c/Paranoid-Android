@@ -1,7 +1,6 @@
-package co.rishe.paranoidandroid;
+package co.rishe.paranoidandroid.mvvm;
 
 import android.annotation.TargetApi;
-import android.content.Context;
 import android.databinding.DataBindingUtil;
 import android.databinding.ViewDataBinding;
 import android.os.Build;
@@ -11,12 +10,12 @@ import android.support.v7.app.AppCompatActivity;
 import java.lang.reflect.InvocationTargetException;
 
 
-public abstract class ResourceActivity<ModelView extends ViewModel, DataBinding extends ViewDataBinding> extends AppCompatActivity {
+public abstract class ResourceActivity<ViewModel extends co.rishe.paranoidandroid.mvvm.ViewModel, DataBinding extends ViewDataBinding> extends AppCompatActivity {
 
     private int layout;
 
-    protected ModelView modelView;
-    protected Class<ModelView> modelViewClass;
+    protected ViewModel viewModel;
+    protected Class<ViewModel> modelViewClass;
     protected DataBinding dataBinding;
     protected Class<DataBinding> dataBindingClass;
 
@@ -31,7 +30,7 @@ public abstract class ResourceActivity<ModelView extends ViewModel, DataBinding 
         {
             ResourceObserver ta = this.getClass().getAnnotation(ResourceObserver.class);
             layout = ta.layout();
-            modelViewClass = (Class<ModelView>) ta.view_model();
+            modelViewClass = (Class<ViewModel>) ta.view_model();
             dataBindingClass = (Class<DataBinding>) ta.data_binding();
 
         } else {
@@ -39,8 +38,8 @@ public abstract class ResourceActivity<ModelView extends ViewModel, DataBinding 
         }
         dataBinding = DataBindingUtil.setContentView(this, layout);
         try {
-            modelView = modelViewClass.getConstructor(ResourceActivity.class).newInstance(this);
-            dataBindingClass.getMethod("setViewModel", modelViewClass).invoke(dataBinding, modelView);
+            viewModel = modelViewClass.getConstructor(ResourceActivity.class).newInstance(this);
+            dataBindingClass.getMethod("setViewModel", modelViewClass).invoke(dataBinding, viewModel);
         } catch (InstantiationException | IllegalAccessException e) {
             e.printStackTrace();
         } catch (NoSuchMethodException e) {
@@ -54,7 +53,7 @@ public abstract class ResourceActivity<ModelView extends ViewModel, DataBinding 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        modelView.destroy();
+        viewModel.destroy();
     }
 
     public abstract void onCompleted();

@@ -5,12 +5,12 @@ import android.databinding.ObservableInt;
 import android.util.Log;
 import android.view.View;
 
-import co.rishe.paranoidandroid.ResourceActivity;
-import co.rishe.paranoidandroid.ViewModel;
+import co.rishe.paranoidandroid.mvvm.ResourceActivity;
+import co.rishe.paranoidandroid.mvvm.ViewModel;
 import co.rishe.paranoidtest.R;
 import co.rishe.paranoidtest.resource.Films;
 
-public class MainViewModel extends ViewModel {
+public class MainViewModel extends ViewModel<Films> {
 
     private static final String TAG = "MainViewModel";
 
@@ -21,7 +21,7 @@ public class MainViewModel extends ViewModel {
     public ObservableField<String> infoMessage;
 
     public MainViewModel(ResourceActivity activity) {
-        super(activity);
+        super(activity, Films.class);
 
         Log.e("MainViewModel","Constructor");
 
@@ -32,16 +32,6 @@ public class MainViewModel extends ViewModel {
         infoMessage = new ObservableField<>(activity.getString(R.string.default_info_message));
         recyclerViewVisibility.set(View.VISIBLE);
 
-    }
-
-
-    @Override
-    public Films getData() {
-        if(data != null)
-            return (Films) data;
-        else {
-            return new Films();
-        }
     }
 
     @Override

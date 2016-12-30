@@ -8,7 +8,7 @@ import android.view.ViewGroup;
 import java.util.Collections;
 import java.util.List;
 
-import co.rishe.paranoidandroid.ResourceActivity;
+import co.rishe.paranoidandroid.mvvm.ResourceActivity;
 import co.rishe.paranoidtest.databinding.ItemFilmBinding;
 import co.rishe.paranoidtest.resource.Films.AllFilms.Film;
 import co.rishe.paranoidtest.viewmodel.ItemFilmViewModel;

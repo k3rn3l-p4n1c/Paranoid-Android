@@ -4,8 +4,8 @@ import android.databinding.ObservableField;
 
 import java.util.List;
 
-import co.rishe.paranoidandroid.ResourceActivity;
-import co.rishe.paranoidandroid.ViewModel;
+import co.rishe.paranoidandroid.mvvm.ResourceActivity;
+import co.rishe.paranoidandroid.mvvm.ViewModel;
 import co.rishe.paranoidtest.resource.FilmQuery;
 
 /**
@@ -19,7 +19,7 @@ public class FilmViewModel extends ViewModel<FilmQuery> {
     public ObservableField<String> created;
 
     public FilmViewModel(ResourceActivity activity) {
-        super(activity);
+        super(activity, FilmQuery.class);
         title = new ObservableField<>("title");
         openingCrawl = new ObservableField<>();
         director = new ObservableField<>();
@@ -27,11 +27,6 @@ public class FilmViewModel extends ViewModel<FilmQuery> {
         created = new ObservableField<>();
     }
 
-
-    @Override
-    public FilmQuery getData() {
-        return new FilmQuery();
-    }
 
     @Override
     public void onCompleted() {

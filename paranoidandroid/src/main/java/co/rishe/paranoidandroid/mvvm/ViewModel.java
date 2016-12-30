@@ -1,9 +1,11 @@
-package co.rishe.paranoidandroid;
+package co.rishe.paranoidandroid.mvvm;
 
+import android.content.Context;
 import android.util.Log;
 
 import co.rishe.graphql.GraphClient;
-import co.rishe.graphql.GraphQuery;
+import co.rishe.graphql.GraphModel;
+import co.rishe.paranoidandroid.ParanoidApp;
 import rx.Subscriber;
 import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
@@ -11,27 +13,29 @@ import rx.android.schedulers.AndroidSchedulers;
 /**
  * Interface that every ViewModel must implement
  */
-public abstract class ViewModel<Model extends GraphQuery> {
+public abstract class ViewModel<Model extends GraphModel> {
 
     protected Model data;
+    private Class<Model> queryClass;
 
-    protected ResourceActivity activity;
+    protected Context context;
     protected Subscription subscription;
 
 
-    public ViewModel(ResourceActivity activity) {
-        this.activity = activity;
+    public ViewModel(Context context, Class<Model> qClass) {
+        this.context = context;
+        this.queryClass = qClass;
         loadData();
     }
 
-    abstract public Model getData();
+    public Model getData() {
+        return data;
+    }
 
     private void loadData() {
-        ParanoidApp application = ParanoidApp.get(activity);
+        ParanoidApp application = ParanoidApp.get(context);
         GraphClient graphClient = application.getGraphClient();
-        Model films = getData();
-        GraphClient.GraphRequest<Model> request;
-        request = graphClient.createRequest(films);
+        GraphClient.GraphRequest<Model> request = graphClient.createRequest(queryClass);
         Log.w("Query:", request.getQuery().getQueryString());
 
         subscription = request.promise()
@@ -51,7 +55,7 @@ public abstract class ViewModel<Model extends GraphQuery> {
 
                     @Override
                     public void onNext(Model data) {
-                        ViewModel.this.data = data;
+                        ViewModel.this.data = (Model) data;
                     }
                 });
     }
@@ -59,7 +63,7 @@ public abstract class ViewModel<Model extends GraphQuery> {
     public void destroy() {
         if (subscription != null && !subscription.isUnsubscribed()) subscription.unsubscribe();
         subscription = null;
-        activity = null;
+        context = null;
     }
 
     public abstract void onCompleted();

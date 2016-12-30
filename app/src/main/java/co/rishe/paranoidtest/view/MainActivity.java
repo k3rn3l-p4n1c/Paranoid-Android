@@ -6,9 +6,9 @@ import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 
 import co.rishe.paranoidandroid.ParanoidApp;
-import co.rishe.paranoidandroid.PeriodicLinkage;
-import co.rishe.paranoidandroid.ResourceActivity;
-import co.rishe.paranoidandroid.ResourceObserver;
+import co.rishe.paranoidandroid.linkage.PeriodicLinkage;
+import co.rishe.paranoidandroid.mvvm.ResourceActivity;
+import co.rishe.paranoidandroid.mvvm.ResourceObserver;
 import co.rishe.paranoidtest.FilmAdapter;
 import co.rishe.paranoidtest.R;
 import co.rishe.paranoidtest.databinding.MainActivityBinding;

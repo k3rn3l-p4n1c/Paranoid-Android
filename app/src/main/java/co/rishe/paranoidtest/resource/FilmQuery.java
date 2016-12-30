@@ -2,12 +2,13 @@ package co.rishe.paranoidtest.resource;
 
 import java.util.List;
 
+import co.rishe.graphql.GraphModel;
 import co.rishe.graphql.GraphQuery;
 
 /**
  * Created by Bardia on 12/18/16.
  */
-public class FilmQuery extends GraphQuery {
+public class FilmQuery implements GraphModel {
     public Film film;
 
     public static class Film {
