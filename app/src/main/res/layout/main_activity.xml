@@ -7,13 +7,19 @@
     <data>
 
         <variable
-            name="viewModel"
+            name="mainViewModel"
             type="co.rishe.paranoidtest.viewmodel.MainViewModel"/>
+
+        <variable
+            name="view"
+            type="co.rishe.paranoidtest.view.MainActivity"/>
     </data>
     <android.support.v7.widget.RecyclerView
         android:id="@+id/filmsRecyclerView"
-        app:visibility="@{viewModel.recyclerViewVisibility}"
+        app:visibility="@{mainViewModel.recyclerViewVisibility}"
         tools:listitem="@layout/item_film"
+        app:items="@{mainViewModel.films}"
+        app:itemViewBinder="@{view.itemViewBinder}"
         android:layout_width="match_parent"
         android:layout_height="match_parent"/>
 </layout>

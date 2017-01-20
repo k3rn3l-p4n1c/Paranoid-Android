@@ -3,13 +3,13 @@ package co.rishe.graphql;
 import co.rishe.graphql.Errors.InvalidResponse;
 
 import com.google.gson.Gson;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 
 import okhttp3.*;
 import rx.Observable;
 import rx.Subscriber;
 
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.io.IOException;
 
@@ -67,17 +67,15 @@ public class GraphClient {
         private T extractObject(Response response) throws InvalidResponse, IOException {
             String json = response.body().string();
 
-            JSONObject jObject = null;
-            try {
-                jObject = new JSONObject(json);
-            } catch (JSONException e) {
-                throw new InvalidResponse("Server does not return a valid response. Response is not json.\n" +
-                        "The response is:\n" + json);
-            }
-            JSONObject data;
-            try {
-                data = jObject.getJSONObject("data"); // get data object
-            } catch (JSONException e) {
+            JsonParser parser = new JsonParser();
+
+            JsonObject jObject = parser.parse(json).getAsJsonObject();
+            if (jObject == null)
+                throw new InvalidResponse("Server does not return a valid response. Response is not json.\n" + json);
+
+
+            JsonObject data = jObject.getAsJsonObject("data"); // get data object
+            if (data == null) {
                 throw new InvalidResponse("Server does not return a valid response. \"data\" field expected in response. Check your GraphQuery class.\n" +
                         "The response is:\n" + json);
             }

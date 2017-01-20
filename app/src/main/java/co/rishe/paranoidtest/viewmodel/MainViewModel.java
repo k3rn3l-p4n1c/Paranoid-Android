@@ -1,41 +1,51 @@
 package co.rishe.paranoidtest.viewmodel;
 
-import android.databinding.ObservableField;
+import android.databinding.Bindable;
+import android.databinding.ObservableArrayList;
 import android.databinding.ObservableInt;
 import android.util.Log;
 import android.view.View;
 
 import co.rishe.paranoidandroid.mvvm.ResourceActivity;
 import co.rishe.paranoidandroid.mvvm.ViewModel;
+import co.rishe.paranoidandroid.mvvm.recyclerview.adapter.binder.ItemBinder;
+import co.rishe.paranoidandroid.mvvm.recyclerview.adapter.binder.ItemBinderBase;
+import co.rishe.paranoidtest.BR;
 import co.rishe.paranoidtest.R;
 import co.rishe.paranoidtest.resource.Films;
 
 public class MainViewModel extends ViewModel<Films> {
 
     private static final String TAG = "MainViewModel";
-
-    public ObservableInt infoMessageVisibility;
-    public ObservableInt progressVisibility;
     public ObservableInt recyclerViewVisibility;
-    public ObservableInt searchButtonVisibility;
-    public ObservableField<String> infoMessage;
+
+    @Bindable
+    public ObservableArrayList<ItemFilmViewModel> films;
 
     public MainViewModel(ResourceActivity activity) {
         super(activity, Films.class);
 
         Log.e("MainViewModel","Constructor");
 
-        infoMessageVisibility = new ObservableInt(View.VISIBLE);
-        progressVisibility = new ObservableInt(View.INVISIBLE);
         recyclerViewVisibility = new ObservableInt(View.INVISIBLE);
-        searchButtonVisibility = new ObservableInt(View.GONE);
-        infoMessage = new ObservableField<>(activity.getString(R.string.default_info_message));
+        films = new ObservableArrayList<>();
         recyclerViewVisibility.set(View.VISIBLE);
 
     }
 
+    public ItemBinder<ItemFilmViewModel> itemViewBinder()
+    {
+        return new ItemBinderBase<>(BR.itemFilmViewModel, R.layout.item_film);
+    }
+
     @Override
-    public void onCompleted() {
-        activity.onCompleted();
+    public void onCompleted(Films updateData) {
+        System.out.println(updateData.allFilms.films.size());
+        for (Films.AllFilms.Film film :
+                updateData.allFilms.films) {
+            System.out.println("hi");
+            System.out.println(film.id);
+            films.add(new ItemFilmViewModel(getActivity(), film));
+        }
     }
 }

@@ -58,10 +58,10 @@ public class FilmAdapter extends RecyclerView.Adapter<FilmAdapter.RepositoryView
         }
 
         void bindRepository(Film film) {
-            if (binding.getViewModel() == null) {
-                binding.setViewModel(new ItemFilmViewModel((ResourceActivity) itemView.getContext(), film));
+            if (binding.getItemFilmViewModel() == null) {
+                binding.setItemFilmViewModel(new ItemFilmViewModel((ResourceActivity) itemView.getContext(), film));
             } else {
-                binding.getViewModel().setFilm(film);
+                binding.getItemFilmViewModel().setFilm(film);
             }
         }
     }

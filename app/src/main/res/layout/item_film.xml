@@ -6,7 +6,7 @@
     <data>
 
         <variable
-            name="viewModel"
+            name="itemFilmViewModel"
             type="co.rishe.paranoidtest.viewmodel.ItemFilmViewModel" />
     </data>
 
@@ -25,7 +25,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:background="?attr/selectableItemBackground"
-            android:onClick="@{viewModel.onItemClick}"
+            android:onClick="@{itemFilmViewModel.onItemClick}"
             android:orientation="vertical">
 
             <TextView
@@ -37,7 +37,7 @@
                 android:paddingLeft="12dp"
                 android:paddingRight="12dp"
                 android:paddingTop="12dp"
-                android:text="@{viewModel.title}"
+                android:text="@{itemFilmViewModel.title}"
                 android:textSize="20sp"
                 tools:text="A New Hope" />
 
@@ -53,7 +53,7 @@
                     <TextView
                         android:id="@+id/directorTextView"
                         android:padding="10dp"
-                        android:text="@{viewModel.director}"
+                        android:text="@{itemFilmViewModel.director}"
                         android:textColor="@color/secondary_text"
                         tools:text="George Lucas" />
                 </TableRow>
@@ -65,7 +65,7 @@
                     <TextView
                         android:id="@+id/releaseDateTextView"
                         android:padding="10dp"
-                        android:text="@{viewModel.releaseDate}"
+                        android:text="@{itemFilmViewModel.releaseDate}"
                         android:textColor="@color/secondary_text"
                         tools:text="1977-05-25" />
                 </TableRow>

@@ -11,6 +11,7 @@ public class MyQuery implements GraphModel {
         public List<Film> films = null;
 
         static public class Film {
+            public String id;
             public String title;
             public String director;
             public int episodeID;

@@ -1,6 +1,8 @@
 package co.rishe.paranoidandroid.mvvm;
 
+import android.app.Activity;
 import android.content.Context;
+import android.databinding.BaseObservable;
 import android.util.Log;
 
 import co.rishe.graphql.GraphClient;
@@ -13,17 +15,17 @@ import rx.android.schedulers.AndroidSchedulers;
 /**
  * Interface that every ViewModel must implement
  */
-public abstract class ViewModel<Model extends GraphModel> {
+public abstract class ViewModel<Model extends GraphModel> extends BaseObservable{
 
     protected Model data;
     private Class<Model> queryClass;
 
-    protected Context context;
+    private ResourceActivity activity;
     protected Subscription subscription;
 
 
-    public ViewModel(Context context, Class<Model> qClass) {
-        this.context = context;
+    public ViewModel(ResourceActivity activity, Class<Model> qClass) {
+        this.activity = activity;
         this.queryClass = qClass;
         loadData();
     }
@@ -32,8 +34,12 @@ public abstract class ViewModel<Model extends GraphModel> {
         return data;
     }
 
+    public ResourceActivity getActivity() {
+        return activity;
+    }
+
     private void loadData() {
-        ParanoidApp application = ParanoidApp.get(context);
+        ParanoidApp application = ParanoidApp.get(activity);
         GraphClient graphClient = application.getGraphClient();
         GraphClient.GraphRequest<Model> request = graphClient.createRequest(queryClass);
         Log.w("Query:", request.getQuery().getQueryString());
@@ -45,7 +51,7 @@ public abstract class ViewModel<Model extends GraphModel> {
                     @Override
                     public void onCompleted() {
                         Log.e("On comp", data.toString());
-                        ViewModel.this.onCompleted();
+                        ViewModel.this.onCompleted(data);
                     }
 
                     @Override
@@ -63,9 +69,9 @@ public abstract class ViewModel<Model extends GraphModel> {
     public void destroy() {
         if (subscription != null && !subscription.isUnsubscribed()) subscription.unsubscribe();
         subscription = null;
-        context = null;
+        activity = null;
     }
 
-    public abstract void onCompleted();
+    public abstract void onCompleted(Model data);
 
 }

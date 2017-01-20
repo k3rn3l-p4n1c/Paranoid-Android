@@ -11,21 +11,21 @@
     <data>
 
         <variable
-            name="viewModel"
+            name="filmViewModel"
             type="co.rishe.paranoidtest.viewmodel.FilmViewModel" />
     </data>
     <LinearLayout
         android:orientation="vertical">
         <TextView
-            android:text="@{viewModel.title}"
+            android:text="@{filmViewModel.title}"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
         <TextView
-            android:text="@{viewModel.director}"
+            android:text="@{filmViewModel.director}"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
         <TextView
-            android:text="@{viewModel.created}"
+            android:text="@{filmViewModel.created}"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
     </LinearLayout>

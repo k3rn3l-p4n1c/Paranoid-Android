@@ -39,14 +39,16 @@ public abstract class ResourceActivity<ViewModel extends co.rishe.paranoidandroi
         dataBinding = DataBindingUtil.setContentView(this, layout);
         try {
             viewModel = modelViewClass.getConstructor(ResourceActivity.class).newInstance(this);
-            dataBindingClass.getMethod("setViewModel", modelViewClass).invoke(dataBinding, viewModel);
-        } catch (InstantiationException | IllegalAccessException e) {
-            e.printStackTrace();
-        } catch (NoSuchMethodException e) {
-            e.printStackTrace();
-        } catch (InvocationTargetException e) {
+        } catch (InstantiationException | IllegalAccessException | NoSuchMethodException | InvocationTargetException e) {
             e.printStackTrace();
         }
+
+        try {
+            dataBindingClass.getMethod("setViewModel", modelViewClass).invoke(dataBinding, viewModel);
+        } catch (IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
+            e.printStackTrace();
+        }
+
 
     }
 

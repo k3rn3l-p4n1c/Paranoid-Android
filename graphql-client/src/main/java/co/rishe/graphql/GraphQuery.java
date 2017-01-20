@@ -106,7 +106,7 @@ public class GraphQuery {
 
 
     private boolean isFieldInvalid(Field field) {
-        return field.getName().contains("$");
+        return field.getName().contains("$") || field.getName().equals("serialVersionUID");
     }
 
     static private boolean isFilter(Field field) {

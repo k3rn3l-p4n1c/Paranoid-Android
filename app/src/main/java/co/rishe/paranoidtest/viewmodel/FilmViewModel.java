@@ -8,9 +8,6 @@ import co.rishe.paranoidandroid.mvvm.ResourceActivity;
 import co.rishe.paranoidandroid.mvvm.ViewModel;
 import co.rishe.paranoidtest.resource.FilmQuery;
 
-/**
- * Created by Bardia on 12/18/16.
- */
 public class FilmViewModel extends ViewModel<FilmQuery> {
     public ObservableField<String> title;
     public ObservableField<String> openingCrawl;
@@ -29,7 +26,7 @@ public class FilmViewModel extends ViewModel<FilmQuery> {
 
 
     @Override
-    public void onCompleted() {
+    public void onCompleted(FilmQuery data) {
         FilmQuery.Film film = data.film;
         title.set(film.title);
         openingCrawl.set(film.openingCrawl);

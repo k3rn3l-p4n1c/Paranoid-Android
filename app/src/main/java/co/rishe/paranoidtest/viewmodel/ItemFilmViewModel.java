@@ -57,7 +57,7 @@ public class ItemFilmViewModel extends ViewModel<Films> {
     }
 
     @Override
-    public void onCompleted() {
+    public void onCompleted(Films data) {
 
     }
 
