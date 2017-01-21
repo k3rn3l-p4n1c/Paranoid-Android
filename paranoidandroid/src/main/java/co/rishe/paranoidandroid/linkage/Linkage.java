@@ -52,7 +52,6 @@ public class Linkage<Model extends GraphModel> extends Observable {
                 .subscribe(new Subscriber<Model>() {
                     @Override
                     public void onCompleted() {
-                        System.out.println("onCompleted");
                         notifyObservers();
                         policy.update(Linkage.this, data);
                     }

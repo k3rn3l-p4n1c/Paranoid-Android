@@ -43,4 +43,5 @@ dependencies {
 //    compile 'org.robolectric:robolectric:3.0'
     compile project(path: ':graphql-client')
     compile project(path: ':paranoidandroid')
+    compile 'com.google.android.gms:play-services-appindexing:8.4.0'
 }

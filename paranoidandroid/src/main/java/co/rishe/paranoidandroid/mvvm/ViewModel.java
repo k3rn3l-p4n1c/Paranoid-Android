@@ -3,6 +3,8 @@ package co.rishe.paranoidandroid.mvvm;
 import android.app.Activity;
 import android.content.Context;
 import android.databinding.BaseObservable;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 
 import co.rishe.graphql.GraphClient;
@@ -70,6 +72,12 @@ public abstract class ViewModel<Model extends GraphModel> extends BaseObservable
         if (subscription != null && !subscription.isUnsubscribed()) subscription.unsubscribe();
         subscription = null;
         activity = null;
+    }
+
+
+
+    public LinearLayoutManager layoutManager() {
+        return new LinearLayoutManager(this.activity);
     }
 
     public abstract void onCompleted(Model data);

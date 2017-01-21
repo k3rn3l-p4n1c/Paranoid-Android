@@ -43,8 +43,6 @@ public class MainViewModel extends ViewModel<Films> {
         System.out.println(updateData.allFilms.films.size());
         for (Films.AllFilms.Film film :
                 updateData.allFilms.films) {
-            System.out.println("hi");
-            System.out.println(film.id);
             films.add(new ItemFilmViewModel(getActivity(), film));
         }
     }

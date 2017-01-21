@@ -23,11 +23,7 @@ public abstract class ResourceActivity<ViewModel extends co.rishe.paranoidandroi
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        System.out.println("#############\n#############\n#############\n#############\n#############\n#############\n");
-
-        if (this.getClass().isAnnotationPresent(ResourceObserver.class))
-        {
+        if (this.getClass().isAnnotationPresent(ResourceObserver.class)) {
             ResourceObserver ta = this.getClass().getAnnotation(ResourceObserver.class);
             layout = ta.layout();
             modelViewClass = (Class<ViewModel>) ta.view_model();
@@ -42,9 +38,11 @@ public abstract class ResourceActivity<ViewModel extends co.rishe.paranoidandroi
         } catch (InstantiationException | IllegalAccessException | NoSuchMethodException | InvocationTargetException e) {
             e.printStackTrace();
         }
+        String[] nameParts = modelViewClass.getName().split("\\.");
+        String viewModelName = nameParts[nameParts.length - 1];
 
         try {
-            dataBindingClass.getMethod("setViewModel", modelViewClass).invoke(dataBinding, viewModel);
+            dataBindingClass.getMethod("set" + viewModelName, modelViewClass).invoke(dataBinding, viewModel);
         } catch (IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
             e.printStackTrace();
         }
@@ -57,6 +55,4 @@ public abstract class ResourceActivity<ViewModel extends co.rishe.paranoidandroi
         super.onDestroy();
         viewModel.destroy();
     }
-
-    public abstract void onCompleted();
 }

@@ -26,7 +26,6 @@ public class PeriodicLinkage implements LinkagePolicy {
             @Override
             public void run() {
                 linkage.fetch();
-                System.out.println("fetch da fuck");
             }
 
         }, 0, 5000);

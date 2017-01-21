@@ -24,9 +24,4 @@ public class FilmActivity extends ResourceActivity<FilmViewModel, FilmActivityBi
 //            e.printStackTrace();
 //        }
     }
-
-    @Override
-    public void onCompleted() {
-
-    }
 }

@@ -17,9 +17,11 @@
     <android.support.v7.widget.RecyclerView
         android:id="@+id/filmsRecyclerView"
         app:visibility="@{mainViewModel.recyclerViewVisibility}"
-        tools:listitem="@layout/item_film"
+        app:itemViewBinder="@{mainViewModel.itemViewBinder}"
+        app:layoutManager="@{mainViewModel.layoutManager}"
         app:items="@{mainViewModel.films}"
-        app:itemViewBinder="@{view.itemViewBinder}"
+        tools:listitem="@layout/item_film"
         android:layout_width="match_parent"
         android:layout_height="match_parent"/>
+
 </layout>
