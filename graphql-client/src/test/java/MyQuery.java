@@ -1,8 +1,8 @@
 import java.util.List;
 
-import co.rishe.graphql.GraphModel;
+import co.rishe.graphql.ResourceModel;
 
-public class MyQuery implements GraphModel {
+public class MyQuery implements ResourceModel {
     public AllFilms allFilms;
 
     public static class AllFilms {

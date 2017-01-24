@@ -1,13 +1,14 @@
 package co.rishe.paranoidandroid.linkage;
 
 import android.content.Context;
-import android.util.Log;
 
 import java.io.InvalidObjectException;
 import java.util.Observable;
 
-import co.rishe.graphql.GraphClient;
-import co.rishe.graphql.GraphModel;
+import co.rishe.graphql.ResourceClient;
+import co.rishe.graphql.ResourceRequest;
+import co.rishe.graphql.implementation.GraphClient;
+import co.rishe.graphql.ResourceModel;
 import co.rishe.paranoidandroid.ParanoidApp;
 import rx.Subscriber;
 import rx.Subscription;
@@ -16,12 +17,12 @@ import rx.android.schedulers.AndroidSchedulers;
 /**
  * With this class you can link model to resource and have update data when you need
  */
-public class Linkage<Model extends GraphModel> extends Observable {
-    Model data;
-    Class<Model> modelClass;
-    Context context;
-    LinkagePolicy policy;
-    Subscription subscription;
+public class Linkage<Model extends ResourceModel> extends Observable {
+    private Model data;
+    private Class<Model> modelClass;
+    private Context context;
+    private LinkagePolicy policy;
+    private Subscription subscription;
 
 
     public Linkage(Class<Model> modelClass, LinkagePolicy policy, Context context) {
@@ -42,9 +43,8 @@ public class Linkage<Model extends GraphModel> extends Observable {
 
     public void fetch() {
         ParanoidApp application = ParanoidApp.get(context);
-        GraphClient graphClient = application.getGraphClient();
-        GraphClient.GraphRequest<Model> request = graphClient.createRequest(modelClass);
-        Log.w("Query:", request.getQuery().getQueryString());
+        ResourceClient client = application.getResourceClient();
+        ResourceRequest<Model> request = client.createRequest(modelClass);
 
         subscription = request.promise()
                 .observeOn(AndroidSchedulers.mainThread())

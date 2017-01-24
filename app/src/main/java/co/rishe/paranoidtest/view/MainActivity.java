@@ -2,11 +2,15 @@ package co.rishe.paranoidtest.view;
 
 import android.os.Bundle;
 
-import co.rishe.paranoidandroid.ParanoidApp;
+import java.io.InvalidObjectException;
+
+import co.rishe.paranoidandroid.linkage.PeriodicLinkage;
 import co.rishe.paranoidandroid.mvvm.ResourceActivity;
 import co.rishe.paranoidandroid.mvvm.ResourceObserver;
+import co.rishe.paranoidtest.Paranoia;
 import co.rishe.paranoidtest.R;
 import co.rishe.paranoidtest.databinding.MainActivityBinding;
+import co.rishe.paranoidtest.resource.Films;
 import co.rishe.paranoidtest.viewmodel.MainViewModel;
 
 @ResourceObserver(
@@ -20,8 +24,10 @@ public class MainActivity extends ResourceActivity<MainViewModel, MainActivityBi
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        ParanoidApp app = (ParanoidApp) getApplication();
-//        app.link(1L, new Films(), new PeriodicLinkage());
+        Paranoia app = (Paranoia) getApplication();
+        app.link(1L, new Films(), new PeriodicLinkage());
+
+
     }
 
 }

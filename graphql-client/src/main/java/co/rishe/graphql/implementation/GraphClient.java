@@ -1,4 +1,4 @@
-package co.rishe.graphql;
+package co.rishe.graphql.implementation;
 
 import co.rishe.graphql.Errors.InvalidResponse;
 
@@ -6,6 +6,9 @@ import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
+import co.rishe.graphql.ResourceClient;
+import co.rishe.graphql.ResourceModel;
+import co.rishe.graphql.ResourceRequest;
 import okhttp3.*;
 import rx.Observable;
 import rx.Subscriber;
@@ -18,40 +21,44 @@ import java.io.IOException;
  * Graph client request a Graph query from a GraphQL server.
  * Created by Bardia on 12/10/16.
  */
-public class GraphClient {
+public class GraphClient implements ResourceClient {
 
     private final OkHttpClient httpClient;
     private final Gson gson;
     private final String baseUrl;
+    private final MediaType mediaType = MediaType.parse("application/json");
 
 
-    public GraphClient(String baseUrl) {
+    GraphClient(final String baseUrl) {
         this.gson = new Gson();
         this.httpClient = new OkHttpClient();
         this.baseUrl = baseUrl;
     }
 
-    public <T extends GraphModel> GraphRequest createRequest(Class<T> query) {
+    public <T extends ResourceModel> GraphRequest createRequest(Class<T> query) {
         return new GraphRequest<T>(query);
     }
 
 
-    public class GraphRequest<T extends GraphModel> {
+    public class GraphRequest<T> implements ResourceRequest<T> {
         private final Class<T> tClass;
-        private final GraphQuery query;
+        private final co.rishe.graphql.implementation.GraphQuery query;
 
         GraphRequest(Class<T> qClass) {
             this.tClass = qClass;
-            this.query = new GraphQuery(qClass);
+            this.query = new co.rishe.graphql.implementation.GraphQuery(qClass);
 
         }
 
-        public GraphQuery getQuery() {
+        public GraphRequest<T> createRequest(Class<T> query) {
+            return new GraphRequest<T>(query);
+        }
+
+        public co.rishe.graphql.implementation.GraphQuery getQuery() {
             return query;
         }
 
         public Call getRequest() {
-            final MediaType mediaType = MediaType.parse("application/json");
             String bodyString = "{\n\t\"query\":\n\t\t \"{ " + query.getQueryString() + " }\"\n}";
 
             final RequestBody body = RequestBody.create(mediaType, bodyString);

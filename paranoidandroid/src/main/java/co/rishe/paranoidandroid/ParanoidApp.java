@@ -7,8 +7,10 @@ import android.content.Context;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-import co.rishe.graphql.GraphClient;
-import co.rishe.graphql.GraphModel;
+import co.rishe.graphql.ResourceClient;
+import co.rishe.graphql.implementation.GraphClient;
+import co.rishe.graphql.ResourceModel;
+import co.rishe.graphql.implementation.GraphClientBuilder;
 import co.rishe.paranoidandroid.linkage.Linkage;
 import co.rishe.paranoidandroid.linkage.LinkagePolicy;
 import rx.Scheduler;
@@ -17,22 +19,23 @@ import rx.schedulers.Schedulers;
 /**
  * Paranoid android app
  */
-public class ParanoidApp extends Application {
+public abstract class ParanoidApp extends Application {
 
     private Scheduler defaultSubscribeScheduler;
-    private GraphClient graphClient;
+    private ResourceClient resourceClient;
     private Map<Long, Linkage> linkageMap;
-
 
     public static ParanoidApp get(Context context) {
         return (ParanoidApp) context.getApplicationContext();
     }
 
-    public GraphClient getGraphClient() {
-        if (graphClient == null) {
-            graphClient = new GraphClient("http://graphql-swapi.parseapp.com/");
+    public ResourceClient getResourceClient() {
+        if (resourceClient == null) {
+            resourceClient = new GraphClientBuilder()
+                    .setUrl(url())
+                    .build();
         }
-        return graphClient;
+        return resourceClient;
     }
 
     public Scheduler defaultSubscribeScheduler() {
@@ -46,7 +49,7 @@ public class ParanoidApp extends Application {
         this.defaultSubscribeScheduler = scheduler;
     }
 
-    public void link(Long id, GraphModel query, LinkagePolicy policy) {
+    public void link(Long id, ResourceModel query, LinkagePolicy policy) {
         if (linkageMap == null) {
             linkageMap = new LinkedHashMap<>();
         }
@@ -54,7 +57,9 @@ public class ParanoidApp extends Application {
         linkageMap.put(id, new Linkage<>(query.getClass(), policy, this));
     }
 
-    public Linkage getLinkage(Long id){
+    public Linkage getLinkage(Long id) {
         return linkageMap.get(id);
     }
+
+    abstract public String url();
 }

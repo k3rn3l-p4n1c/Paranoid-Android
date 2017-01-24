@@ -1,14 +1,13 @@
 package co.rishe.paranoidandroid.mvvm;
 
-import android.app.Activity;
-import android.content.Context;
 import android.databinding.BaseObservable;
 import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 
-import co.rishe.graphql.GraphClient;
-import co.rishe.graphql.GraphModel;
+import co.rishe.graphql.ResourceClient;
+import co.rishe.graphql.ResourceRequest;
+import co.rishe.graphql.implementation.GraphClient;
+import co.rishe.graphql.ResourceModel;
 import co.rishe.paranoidandroid.ParanoidApp;
 import rx.Subscriber;
 import rx.Subscription;
@@ -17,7 +16,7 @@ import rx.android.schedulers.AndroidSchedulers;
 /**
  * Interface that every ViewModel must implement
  */
-public abstract class ViewModel<Model extends GraphModel> extends BaseObservable{
+public abstract class ViewModel<Model extends ResourceModel> extends BaseObservable{
 
     protected Model data;
     private Class<Model> queryClass;
@@ -42,9 +41,8 @@ public abstract class ViewModel<Model extends GraphModel> extends BaseObservable
 
     private void loadData() {
         ParanoidApp application = ParanoidApp.get(activity);
-        GraphClient graphClient = application.getGraphClient();
-        GraphClient.GraphRequest<Model> request = graphClient.createRequest(queryClass);
-        Log.w("Query:", request.getQuery().getQueryString());
+        ResourceClient resourceClient = application.getResourceClient();
+        ResourceRequest<Model> request = resourceClient.createRequest(queryClass);
 
         subscription = request.promise()
                 .observeOn(AndroidSchedulers.mainThread())

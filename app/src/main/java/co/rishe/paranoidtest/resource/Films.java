@@ -2,10 +2,9 @@ package co.rishe.paranoidtest.resource;
 
 import java.util.List;
 
-import co.rishe.graphql.GraphModel;
-import co.rishe.graphql.GraphQuery;
+import co.rishe.graphql.ResourceModel;
 
-public class Films implements GraphModel {
+public class Films implements ResourceModel {
     public AllFilms allFilms;
 
     public static class AllFilms {
